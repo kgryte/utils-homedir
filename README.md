@@ -18,7 +18,7 @@ $ npm install utils-homedir
 var homedir = require( 'utils-homedir' );
 ```
 
-#### homedir
+#### homedir()
 
 Returns the current user's `home` directory.
 
