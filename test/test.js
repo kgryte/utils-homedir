@@ -1,4 +1,4 @@
-/* global require, describe, it */
+/* global require, describe, it, beforeEach */
 'use strict';
 
 var mpath = './../lib';
@@ -8,8 +8,7 @@ var mpath = './../lib';
 
 var chai = require( 'chai' ),
 	os = require( 'os' ),
-	proxyquire = require( 'proxyquire' ),
-	homedir = require( mpath );
+	proxyquire = require( 'proxyquire' );
 
 
 // VARIABLES //
@@ -22,64 +21,322 @@ var expect = chai.expect,
 
 describe( 'utils-homedir', function tests() {
 
+	var opts;
+
+	beforeEach( function before() {
+		opts = {
+			'os': {
+				'homedir': undefined
+			},
+			'utils-platform': 'darwin',
+			'check-if-windows': false
+		};
+	});
+
 	it( 'should export a function', function test() {
+		var homedir = proxyquire( mpath, opts );
 		expect( homedir ).to.be.a( 'function' );
 	});
 
 	it( 'should alias `os.homedir`', function test() {
-		if ( os.homedir === void 0 ) {
-			// Older Node versions...
-			os.homedir = mock;
-		}
-		assert.strictEqual( homedir(), os.homedir() );
+		var homedir;
 
-		if ( os.homedir === mock ) {
-			delete os.homedir;
-		}
+		opts.os.homedir = mock;
+		homedir = proxyquire( mpath, opts );
 
-		function mock() {
-			// Assume tests are run on Linux env...
-			return process.env[ 'HOME' ];
-		}
+		assert.strictEqual( homedir, mock );
+
+		function mock(){}
 	});
 
 	it( 'should support older Node versions', function test() {
-		var fcn;
-		if ( os.homedir === void 0 ) {
-			assert.strictEqual( homedir(), process.env[ 'HOME' ] );
-		} else {
-			fcn = os.homedir;
-			delete os.homedir;
+		var homedir,
+			env;
 
-			// Assume Linux env...
-			assert.strictEqual( homedir(), process.env[ 'HOME' ] );
+		homedir = proxyquire( mpath, opts );
 
-			os.homedir = fcn;
+		env = process.env;
+		process.env = {
+			'HOME': '/Users/beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a non-windows environment (HOME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'HOME': '/Users/beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Mac OSX environment (LOGNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'LOGNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Linux environment (LOGNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'LOGNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/home/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Mac OSX environment (USER)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'USER': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Linux environment (USER)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'USER': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/home/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Mac OSX environment (LNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'LNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Linux environment (LNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'LNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/home/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Mac OSX environment (USERNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'USERNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/Users/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory in a Linux environment (USERNAME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'USERNAME': 'beep'
+		};
+
+		assert.strictEqual( homedir(), '/home/beep' );
+
+		process.env = env;
+	});
+
+	it( 'should return `null` if unable to locate a home directory in a Mac OS X environment', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'darwin';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {};
+
+		assert.isNull( homedir() );
+
+		process.env = env;
+	});
+
+	it( 'should return `null` if unable to locate a home directory in a linux environment', function test() {
+		var homedir,
+			env;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {};
+
+		assert.isNull( homedir() );
+
+		process.env = env;
+	});
+
+	it( 'should return the `/root` directory if run as `root` in a linux environment', function test() {
+		var homedir,
+			env,
+			fcn;
+
+		opts[ 'utils-platform' ] = 'linux';
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {};
+
+		fcn = process.getuid;
+		process.getuid = getuid;
+
+		assert.strictEqual( homedir(), '/root' );
+
+		process.env = env;
+		process.getuid = fcn;
+
+		function getuid() {
+			return 0;
 		}
 	});
 
-	it( 'should support Windows', function test() {
+	it( 'should return a home directory on Windows (USERPROFILE)', function test() {
 		var homedir,
-			fcn,
 			env;
 
-		if ( os.homedir !== void 0 ) {
-			fcn = os.homedir;
-			os.homedir = undefined;
-		}
-		homedir = proxyquire( mpath, {
-			'check-if-windows': true
-		});
+		opts[ 'check-if-windows' ] = true;
+		homedir = proxyquire( mpath, opts );
 
-		env = process.env[ 'USERPROFILE' ];
-		process.env[ 'USERPROFILE' ] = 'C:\\Beep\\Boop';
+		env = process.env;
+		process.env = {
+			'USERPROFILE': 'C:\\Users\\boop'
+		};
 
-		assert.strictEqual( homedir(), 'C:\\Beep\\Boop' );
+		assert.strictEqual( homedir(), 'C:\\Users\\boop' );
 
-		if ( fcn  ) {
-			os.homedir = fcn;
-		}
-		process.env[ 'USERPROFILE' ] = env;
+		process.env = env;
+	});
+
+	it( 'should return a home directory on Windows (HOMEDRIVE+HOMEPATH)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'check-if-windows' ] = true;
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'HOMEDRIVE': 'C:',
+			'HOMEPATH': '\\Users\\boop'
+		};
+
+		assert.strictEqual( homedir(), 'C:\\Users\\boop' );
+
+		process.env = env;
+	});
+
+	it( 'should return a home directory on Windows (HOME)', function test() {
+		var homedir,
+			env;
+
+		opts[ 'check-if-windows' ] = true;
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {
+			'HOME': 'C:\\Users\\boop'
+		};
+
+		assert.strictEqual( homedir(), 'C:\\Users\\boop' );
+
+		process.env = env;
+	});
+
+	it( 'should return `null` if unable to locate a home directory on Windows', function test() {
+		var homedir,
+			env;
+
+		opts[ 'check-if-windows' ] = true;
+		homedir = proxyquire( mpath, opts );
+
+		env = process.env;
+		process.env = {};
+
+		assert.isNull( homedir() );
+
+		process.env = env;
 	});
 
 });

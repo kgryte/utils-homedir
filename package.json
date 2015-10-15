@@ -48,6 +48,7 @@
     "check-if-windows": "^1.0.0",
     "minimist": "^1.2.0",
     "pkginfo": "^0.3.0",
+    "utils-platform": "^1.0.0",
     "validate.io-function": "^1.0.2"
   },
   "devDependencies": {

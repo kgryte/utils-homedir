@@ -1,4 +1,4 @@
-Home Directory
+Home
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][codecov-image]][codecov-url] [![Dependencies][dependencies-image]][dependencies-url]
 
@@ -24,8 +24,20 @@ Returns the current user's `home` directory.
 
 ``` javascript
 var home = homedir();
-// returns <dirpath>
+// => e.g., /Users/<username>
 ```
+
+If unable to locate a `home` directory, the module returns `null`.
+
+``` javascript
+var home = homedir();
+// returns null
+```
+
+
+## Notes
+
+*	This module primarily checks various [environment variables](https://en.wikipedia.org/wiki/Environment_variable) to locate a `home` directory. Note that this approach has __security vulnerabilities__, as attackers can tamper with [environment variables](https://en.wikipedia.org/wiki/Environment_variable).
 
 
 ## Examples
@@ -68,6 +80,7 @@ Options:
 
 ``` bash
 $ homedir
+# => e.g., /Users/<username>
 ```
 
 For local installations, modify the command to point to the local installation directory; e.g.,
