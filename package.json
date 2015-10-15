@@ -1,6 +1,6 @@
 {
   "name": "utils-homedir",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Returns the current user's home directory.",
   "author": {
     "name": "Athan Reines",
