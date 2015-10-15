@@ -1,0 +1,63 @@
+{
+  "name": "utils-homedir",
+  "version": "0.0.0",
+  "description": "Returns the current user's home directory.",
+  "author": {
+    "name": "Athan Reines",
+    "email": "kgryte@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Athan Reines",
+      "email": "kgryte@gmail.com"
+    }
+  ],
+  "scripts": {
+    "test": "mocha",
+    "test-cov": "istanbul cover ./node_modules/.bin/_mocha --dir ./reports/coverage -- -R spec",
+    "codecov": "istanbul cover ./node_modules/.bin/_mocha --dir ./reports/codecov/coverage --report lcovonly -- -R spec && cat ./reports/codecov/coverage/lcov.info | codecov && rm -rf ./reports/codecov"
+  },
+  "main": "./lib",
+  "bin": {
+    "homedir": "./bin/cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kgryte/utils-homedir.git"
+  },
+  "keywords": [
+    "utils",
+    "utilities",
+    "utility",
+    "homedir",
+    "dir",
+    "directory",
+    "home",
+    "user",
+    "os",
+    "windows",
+    "darwin",
+    "linux",
+    "mac",
+    "pc"
+  ],
+  "bugs": {
+    "url": "https://github.com/kgryte/utils-homedir/issues"
+  },
+  "dependencies": {
+    "check-if-windows": "^1.0.0",
+    "minimist": "^1.2.0",
+    "pkginfo": "^0.3.0",
+    "validate.io-function": "^1.0.2"
+  },
+  "devDependencies": {
+    "chai": "3.x.x",
+    "codecov.io": "^0.1.5",
+    "istanbul": "^0.3.0",
+    "jshint": "2.x.x",
+    "jshint-stylish": "2.x.x",
+    "mocha": "2.x.x",
+    "proxyquire": "^1.7.3"
+  },
+  "license": "MIT"
+}
